@@ -28,6 +28,9 @@ class BasePage:
     def wait_for(self, locator: Tuple[str, str], timeout: int = 5):
         return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
+    def wait_for_element_to_be_clickable(self, locator: Tuple[str, str], timeout: int = 10):
+        return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+
     def scroll_to(self):
         pass
 
