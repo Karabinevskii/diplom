@@ -2,6 +2,7 @@ import time
 
 import pytest
 
+
 from test_ui.pages.cart_page import CartPage
 from test_ui.pages.catalog_page import CatalogPage
 from test_ui.pages.item_page import ItemPage
@@ -29,8 +30,8 @@ class TestAppleLaptop:
         catalog_page.click_catalog()
         catalog_page.computers()
         catalog_page.choosing_laptop()
-        time.sleep(1)
         item_page.select_by_name()
+        time.sleep(4)
         # item_page.sort_by_lowest_price()
         # item_page.choosing_item()
         # item_page.select_offers()
