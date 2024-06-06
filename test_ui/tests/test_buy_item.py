@@ -1,5 +1,6 @@
 import time
 
+import allure
 import pytest
 
 
@@ -26,39 +27,21 @@ def cart_page(driver):
 
 class TestAppleLaptop:
 
+    @allure.feature("Buying Apple Laptop")
+    @allure.story("User buys an Apple laptop from the catalog")
     def test_buy_apple_laptop(self, item_page, catalog_page, cart_page, driver):
         catalog_page.click_catalog()
         catalog_page.computers()
         catalog_page.choosing_laptop()
         item_page.select_by_name()
-        time.sleep(4)
-        # item_page.sort_by_lowest_price()
-        # item_page.choosing_item()
-        # item_page.select_offers()
-        # item_page.choice_at_the_lowest_price()
-        # item_page.add_to_cart()
-        # item_page.go_to_cart()
+        item_page.sort_by_lowest_price()
+        time.sleep(1)
+        item_page.choosing_item()
+        item_page.select_offers()
+        item_page.choice_at_the_lowest_price()
+        item_page.add_to_cart()
+        item_page.go_to_cart()
+        cart_page.check_cart_title()
+        cart_page.check_button_is_clickable()
+        cart_page.check_cart_count(num_items=1)
 
-    # def test_play_station(self, main_page, driver):
-    #     main_page.input_into_search_field("PlayStation 5")
-    #     main_page.chose_from_iframe_by_index()
-    #
-    # def test_list_of_offers(self, main_page, driver):
-    #     self.test_play_station(main_page, driver)
-    #     main_page.list_of_offers()
-    #
-    # def test_sorting(self, main_page, driver):
-    #     self.test_list_of_offers(main_page, driver)
-    #     main_page.sort_offers()
-    #
-    # def test_sort_by_price(self, main_page, driver):
-    #     self.test_sorting(main_page, driver)
-    #     main_page.sorting_offers()
-    #
-    # def test_choice_by_lowest_price(self, main_page, driver):
-    #     self.test_sort_by_price(main_page, driver)
-    #     main_page.choice_by_lowest_price()
-    #
-    # def test_go_to_cart(self, main_page, driver):
-    #     self.test_choice_by_lowest_price(main_page, driver)
-    #     main_page.go_to_cart()

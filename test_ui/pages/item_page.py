@@ -1,31 +1,37 @@
-from selenium.webdriver import ActionChains
-from selenium.webdriver.support.select import Select
-
-from test_ui.locators.item_page_locators import BN_SELECT_BY_NAME, BN_SORT_OFFERS, BN_CHOOSING_ITEM, BN_OFFERS, \
-    BN_SORT_PRICE, BN_ADD_TO_CART, BN_GO_TO_CART, Apple
+import allure
+from selenium.webdriver import ActionChains, Keys
+from test_ui.locators.item_page_locators import BN_CHOOSING_ITEM, BN_SORT_PRICE, BN_ADD_TO_CART, \
+    BN_GO_TO_CART, BN_SUPER, BN_VISION, TXT_LAPTOP_PRICE, BN_CHOICE_BRANDS, BN_CHOICE_APPLE, \
+    BN_SORTING_BY_PRICE, BN_OFFERS
 from test_ui.pages.base_page import BasePage
+
 
 
 class ItemPage(BasePage):
 
+
+    def laptop_price(self):
+        return self.text(TXT_LAPTOP_PRICE)
+
     def select_by_name(self):
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(*BN_SELECT_BY_NAME))
-        self.click(BN_SELECT_BY_NAME)
-        # action.move_to_element(qwer).click()
-        # apple_button = self.driver.find_element(*Apple)
-        # self.click(Apple)
-        # action.move_to_element(apple_button).click()
-        # self.wait_for(BN_SELECT_BY_NAME).is_selected()
-        # action.scroll_to_element(self.driver.find_element(*BN_SELECT_BY_NAME)).click()
-        # time.sleep(2)
-        # action.scroll_to_element(self.driver.find_element(By.XPATH, '//*[@id="container"]/div/div/div/div/div[2]/div[1]/div/div/div[4]/div/div/div/div/div[2]/div[2]/div[11]/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div')).select_by_visible_text('Apple')
-        # action.move_to_element(self.driver.find_element(Apple)).perform()
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(*BN_SUPER))
+        self.click(BN_CHOICE_BRANDS)
+        self.click(BN_CHOICE_APPLE)
 
-
-
-
+    @allure.step("Sorting offers")
     def sort_by_lowest_price(self):
-        Select(self.driver.find_element(*BN_SORT_OFFERS)).select_by_visible_text("Дешевые")
+        """
+        This function sorts the product by price in ascending order
+        :return:
+        """
+        self.driver.execute_script("window.scrollTo(0, -200);")
+        action = ActionChains(self.driver)
+        selector = self.driver.find_element(*BN_SORTING_BY_PRICE)
+        action.move_to_element(selector).perform()
+        action.click().perform()
+        for _ in range(1):
+            selector.send_keys(Keys.ARROW_DOWN)
+        selector.send_keys(Keys.ENTER)
 
     def choosing_item(self):
         self.click(BN_CHOOSING_ITEM)
@@ -34,10 +40,31 @@ class ItemPage(BasePage):
         self.click(BN_OFFERS)
 
     def choice_at_the_lowest_price(self):
-        Select(self.driver.find_element(*BN_SORT_PRICE)).select_by_visible_text("по возрастанию цены")
+        """
+        This function selects the product at the lowest price
+        :return:
+        """
+        action = ActionChains(self.driver)
+        selector = self.driver.find_element(*BN_SORT_PRICE)
+        action.move_to_element(selector).perform()
+        action.click().perform()
+        for _ in range(1):
+            selector.send_keys(Keys.ARROW_DOWN)
+        selector.send_keys(Keys.ENTER)
 
+    @allure.step("Adding item to cart")
     def add_to_cart(self):
+        """
+        Adding item to cart
+        :return:
+        """
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(*BN_VISION))
         self.click(BN_ADD_TO_CART)
 
+    @allure.step("Going to cart")
     def go_to_cart(self):
+        """
+        Go to the shopping cart
+        :return:
+        """
         self.click(BN_GO_TO_CART)
