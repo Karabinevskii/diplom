@@ -5,14 +5,17 @@ from test_ui.pages.base_page import BasePage
 
 @allure.feature("Catalog Page Tests")
 class CatalogPage(BasePage):
-    @allure.title("Test clicking on catalog")
-    def click_catalog(self):
-        self.click(BN_CATALOG)
 
-    @allure.title("Test selecting computers")
+    def click_catalog(self):
+        with allure.step("Select catalog"):
+            self.click(BN_CATALOG)
+
+
     def computers(self):
-        self.click(BN_COMPUTERS)
+        with allure.step("Select category"):
+            self.click(BN_COMPUTERS)
 
     @allure.title("Test choosing a laptop")
     def choosing_laptop(self):
-        self.click(BN_LAPTOP)
+        with allure.step("Select laptop"):
+            self.click(BN_LAPTOP)

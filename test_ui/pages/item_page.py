@@ -9,14 +9,17 @@ from test_ui.pages.base_page import BasePage
 
 class ItemPage(BasePage):
 
-
+    @property
     def laptop_price(self):
         return self.text(TXT_LAPTOP_PRICE)
 
     def select_by_name(self):
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(*BN_SUPER))
-        self.click(BN_CHOICE_BRANDS)
-        self.click(BN_CHOICE_APPLE)
+        with allure.step("Scroll to the desired button"):
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(*BN_SUPER))
+        with allure.step("Select offers of items"):
+            self.click(BN_CHOICE_BRANDS)
+        with allure.step("Choosing the thing we dream about"):
+            self.click(BN_CHOICE_APPLE)
 
     @allure.step("Sorting offers")
     def sort_by_lowest_price(self):
@@ -34,10 +37,12 @@ class ItemPage(BasePage):
         selector.send_keys(Keys.ENTER)
 
     def choosing_item(self):
-        self.click(BN_CHOOSING_ITEM)
+        with allure.step("Choosing item with the lowest price"):
+            self.click(BN_CHOOSING_ITEM)
 
     def select_offers(self):
-        self.click(BN_OFFERS)
+        with allure.step("Selection of sellers' offers"):
+            self.click(BN_OFFERS)
 
     def choice_at_the_lowest_price(self):
         """
