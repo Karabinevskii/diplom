@@ -1,9 +1,6 @@
-import time
-
 import allure
+import time
 import pytest
-
-
 from test_ui.pages.cart_page import CartPage
 from test_ui.pages.catalog_page import CatalogPage
 from test_ui.pages.item_page import ItemPage
