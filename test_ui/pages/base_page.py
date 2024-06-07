@@ -1,5 +1,4 @@
 from typing import Tuple
-
 from selenium.webdriver.edge.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
