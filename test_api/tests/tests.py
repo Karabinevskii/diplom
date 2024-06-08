@@ -114,56 +114,58 @@ class TestPetstoreAPI:
         with allure.step("Update pets name"):
             put_response = requests.put(
                 url=f"{base_url}/pet",
+                headers={"accept": "application/json",
+                         "Content-Type": "application/json"},
                 json=updated_pet
             )
 
         with allure.step("Check status code"):
             assert put_response.status_code == HttpErrorCodes.Ok, f"Wrong status code: {put_response.status_code}"
 
-        with allure.step("Check the pets name"):
+        with (allure.step("Check the pets name")):
             get_response = requests.get(f"{base_url}/pet/1")
-            assert get_response.json()["name"] == expected_name, f"The pet's name does not match the expected one: {get_response.json()["name"]}"
+            assert get_response.json()["name"] == expected_name, \
+                f"The pet's name doesn't match the expected one: {get_response.json()["name"]}"
 
-
-    def test_find_pets_by_status(self):
+    @allure.title("Find Pets by Status Test")
+    @pytest.mark.parametrize("status", ["available", "pending", "sold"])
+    def test_find_pets_by_status(self, status):
         """
-        Тест API для получения списка питомцев по статусу.
-        """
-        url = "https://petstore.swagger.io/v2/pet/findByStatus"
-        status = "available"  # Укажите желаемый статус питомца
-
-        headers = {
-            "accept": "application/json",
-        }
-
-        params = {
-            "status": status,
-        }
-
-        response = requests.get(url, headers=headers, params=params)
-
-        # Проверьте статус-код ответа
-        assert response.status_code == HttpErrorCodes.Ok, f"Неверный статус-код: {response.status_code}"
-
-        # Проверьте, что ответ содержит список питомцев
-        data = response.json()
-        assert isinstance(data, list), "Ответ не является списком"
-
-        # Проверьте, что все питомцы в списке имеют заданный статус
-        for pet in data:
-            assert pet[
-                       "status"] == status, f"Питомец со статусом {pet['status']} не соответствует ожидаемому статусу {status}"
-
-        print("Тест пройден успешно!")
-
-    @allure.title("Get Pet by ID Test")
-    def test_get_pet_by_id(self):
-        """
-        API test for adding a new pet
+        This function tests find Pets by Status
+        :param status:
         :return:
         """
-        pet_id = 1
-        response = requests.get(f"{base_url}/pet/{pet_id}")
-        assert response.status_code == HttpErrorCodes.Ok
-        pet_data = response.json()
-        assert pet_data["id"] == pet_id
+        with allure.step(f"Get pets with status '{status}'"):
+            get_response = requests.get(
+                url=f"{base_url}/pet/findByStatus",
+                headers={"accept": "application/json",
+                         "Content-Type": "application/json"},
+                params={"status": status}
+            )
+
+        with allure.step("Check status code"):
+            assert get_response.status_code == HttpErrorCodes.Ok, f"Wrong status code: {get_response.status_code}"
+
+    @allure.title("Get Pet by ID")
+    @pytest.mark.parametrize("pet_id, expected_status_code", [
+        (1, 200),
+        (1000, 404),
+    ])
+    def test_get_pet_by_id(self, pet_id, expected_status_code):
+        """
+        API test for getting information about a pet by ID.
+        """
+        with allure.step(f"Request to receive a pet with an ID {pet_id}"):
+            url = f"{base_url}/pet/{pet_id}"
+            get_response = requests.get(url)
+
+        with allure.step("Check status code"):
+            assert get_response.status_code == expected_status_code
+
+        if expected_status_code == HttpErrorCodes.Ok:
+            with allure.step("Checking the contents of the response"):
+                assert get_response.json()['id'] == pet_id
+            with allure.step("Check name is not empty"):
+                assert get_response.json()['name'] is not None
+            with allure.step("Check status is not empty"):
+                assert get_response.json()['status'] is not None
