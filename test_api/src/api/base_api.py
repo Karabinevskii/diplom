@@ -1,13 +1,8 @@
-import requests
+from enum import Enum
 
 
 
-class BaseApi:
-    url = "https://petstore.swagger.io"
+class BaseApi(Enum):
+    base_url = "https://petstore.swagger.io"
 
-    def _post(self, id: int = None, params: dict = None):
-
-
-        if headers is not None:
-            default_headers.update(headers)
 
