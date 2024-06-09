@@ -179,7 +179,6 @@ class TestPetstoreAPI:
                              ]
                              )
     @allure.title("Update Pet with Form Test")
-    @allure.description("This test updates a pet using the form data and checks the response")
     def test_update_pet_with_form(self, pet_id, name, status, expected_status_code):
         """
         This function tests the Update Pet with Form API
@@ -221,7 +220,6 @@ class TestPetstoreAPI:
                              ]
                              )
     @allure.title("Delete Pet Test")
-    @allure.description("This test deletes a pet by its ID and checks the response")
     def test_delete_pet(self, pet_id, api_key, expected_status_code):
         """
         This function tests the Delete Pet API
@@ -238,6 +236,3 @@ class TestPetstoreAPI:
 
         with allure.step("Check status code"):
             assert response.status_code == expected_status_code, f"Expected status code {expected_status_code}, received {response.status_code}"
-
-
-
