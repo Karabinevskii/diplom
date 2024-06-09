@@ -1,4 +1,3 @@
-
 from test_api.src.api.base_api import BaseApi
 
 
@@ -25,10 +24,3 @@ class PetApi(BaseApi):
 
     def delete_pet(self, pet_id: int):
         return self._delete(path=f"/{pet_id}")
-
-
-
-
-
-
-

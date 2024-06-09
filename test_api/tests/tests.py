@@ -45,7 +45,7 @@ class TestPetstoreAPI:
         assert data['code'] == HttpErrorCodes.Ok, f"Wrong code: {data['code']}"
 
     @pytest.mark.parametrize("name", ["Altai", "Baltai", "Shaltai"])
-    @pytest.mark.parametrize("pet_id", [1002, 5, 1598])
+    @pytest.mark.parametrize("pet_id", [1002, 345, 1598])
     def test_add_new_pet(self, name, pet_id):
         """
         This feature allows you to add a new pet to the storage

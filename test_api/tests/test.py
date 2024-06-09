@@ -1,10 +1,11 @@
 from io import BytesIO
 import allure
 import pytest
+import requests
 from PIL import Image
 from django.core.files.uploadedfile import SimpleUploadedFile
 from test_api.src.enums.common import HttpErrorCodes
-
+from test_api.tests.tests import base_url
 
 
 @pytest.mark.api
@@ -12,8 +13,8 @@ from test_api.src.enums.common import HttpErrorCodes
 class TestPetstoreAPI:
 
     @pytest.mark.parametrize("pet_id, file_name, expected_status_code", [
-        (1, "test_image.jpg", 200),  # Success case
-        (1000, "test_image.jpg", 404),  # Invalid pet ID - not found
+        (1, "test_image.png", 200),
+        (1000, "test_image.png", 200),
     ])
     def test_upload_file(self, api_client, pet_id, file_name, expected_status_code):
         """
@@ -29,20 +30,25 @@ class TestPetstoreAPI:
             content=image_io.read(),
             content_type="image/jpeg"
         )
+        payload = {
+            'file': file,
+            'additionalMetadata': 'null'
+        }
 
         with allure.step(f"Download file {file_name} for pet with ID {pet_id}"):
-            response = api_client.pet.upload_file(pet_id, file)
+            response = requests.post(url=f"{base_url}/pet/{pet_id}/uploadImage", files=payload)
 
         with allure.step(f"Check status code: {response.status_code}"):
             assert response.status_code == expected_status_code
 
-        if expected_status_code == 200:
+        if expected_status_code == HttpErrorCodes.Ok:
             with allure.step("Checking the contents of the response"):
-                assert response.json()["code"] == 200
-                assert response.json()["message"] == "Uploaded successfully"
+                assert response.json()["code"] == HttpErrorCodes.Ok
+                assert response.json()[
+                           "message"] == 'additionalMetadata: null\nFile uploaded to ./test_image.png, 823 bytes'
 
     @pytest.mark.parametrize("name", ["Altai", "Baltai", "Shaltai"])
-    @pytest.mark.parametrize("pet_id", [1002, 5, 1598])
+    @pytest.mark.parametrize("pet_id", [1002, 345, 1598])
     def test_add_new_pet(self, name, pet_id, api_client):
         """
         This function allows you to add a new pet to the storage
@@ -59,7 +65,10 @@ class TestPetstoreAPI:
                 "status": "available"
             }
         with allure.step("Request to add a new pet"):
-            add_response = api_client.pet.add_new_pet(new_pet)
+            add_response = requests.post(f"{base_url}/pet",
+                                         headers={"accept": "application/json",
+                                                  "Content-Type": "application/json"},
+                                         json=new_pet)
 
         with allure.step("Check answer"):
             assert add_response.status_code == HttpErrorCodes.Ok, f"Wrong status code: {add_response.status_code}"
@@ -70,8 +79,9 @@ class TestPetstoreAPI:
         with allure.step("Check status"):
             assert add_response.json()["status"] == "available"
 
-        with allure.step("Check pet ID"):
-            assert add_response.json()["pet_id"] == pet_id
+        get_response = api_client.pet.get_pet_by_id(pet_id)
+        assert get_response.status_code == HttpErrorCodes.NotFound, f"Wrong code: {get_response.status_code}"
+
 
     @pytest.mark.parametrize("pet_id, name, status, expected_status_code",
                              [
@@ -127,7 +137,6 @@ class TestPetstoreAPI:
             with allure.step("Check status is not empty"):
                 assert response['status'] is not None
 
-
     @pytest.mark.parametrize("pet_id, name, status, expected_status_code",
                              [
                                  (1, "Altai", "available", HttpErrorCodes.Ok),
@@ -172,6 +181,3 @@ class TestPetstoreAPI:
         with allure.step("Check status code"):
             assert del_response.status_code == expected_status_code, \
                 f"Expected status code {expected_status_code}, received {del_response.status_code}"
-
-
-

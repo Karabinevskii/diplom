@@ -26,7 +26,7 @@ class BaseApi:
         logger.info(f"Headers = {self.default_headers}")
         logger.info(f"{url=}")
 
-        return requests.get(url=url, headers=self.default_headers, params=params)
+        return requests.post(url=url, headers=self.default_headers, params=params)
 
     def _put(self, path: str, headers: dict = None, params: dict = None):
 
@@ -36,7 +36,7 @@ class BaseApi:
         logger.info(f"Headers = {self.default_headers}")
         logger.info(f"{url=}")
 
-        return requests.get(url=url, headers=self.default_headers, params=params)
+        return requests.put(url=url, headers=self.default_headers, params=params)
 
     def _delete(self, path: str, headers: dict = None, params: dict = None):
 
@@ -46,5 +46,5 @@ class BaseApi:
         logger.info(f"Headers = {self.default_headers}")
         logger.info(f"{url=}")
 
-        return requests.get(url=url, headers=self.default_headers, params=params)
+        return requests.delete(url=url, headers=self.default_headers, params=params)
 
