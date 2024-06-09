@@ -25,6 +25,8 @@ class Status(str, BaseEnum):
     """
     Available: str = "available"
     NotAvailable: str = "not-available"
+    Sold: str = "sold"
+    Pending: str = "pending"
 
     def __str__(self) -> str:
         return str.__str__(self)
