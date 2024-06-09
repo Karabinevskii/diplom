@@ -9,9 +9,10 @@ from test_api.src.enums.common import HttpErrorCodes
 base_url = "https://petstore.swagger.io/v2"
 
 
-@pytest.mark.api
+
 @allure.feature("Petstore API Tests")
 class TestPetstoreAPI:
+
     @allure.title("Test uploading a file")
     @pytest.mark.parametrize("pet_id", [1, 2, 3])
     def test_upload_file(self, pet_id: int):
